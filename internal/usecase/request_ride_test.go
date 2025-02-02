@@ -84,4 +84,28 @@ func TestRequestRide(t *testing.T) {
 		assert.Equal(t, "to request a ride the passenger's last ride must be completed", errRequestSecondRide.Error())
 		assert.Equal(t, uuid.Nil, requestRideOutputSecond.RideId)
 	})
+
+	t.Run("It shouldn't request a ride for an account that doesn't exists", func(t *testing.T) {
+
+		accountRepository := database.NewAccountRepository(make([]entity.Account, 0))
+		requestRideInput := RequestRideInput{
+			PassengerId: 1,
+			From: entity.GeoLocation{
+				Lat: 49,
+				Lon: 45,
+			},
+			To: entity.GeoLocation{
+				Lat: 50,
+				Lon: 45,
+			},
+		}
+
+		rideRepository := database.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
+		requestRideOutputFirst, errRequestFirstRide := requestRideUseCase.Execute(requestRideInput)
+
+		assert.NotNil(t, errRequestFirstRide)
+		assert.Equal(t, uuid.Nil, requestRideOutputFirst.RideId)
+		assert.Equal(t, "no account with id 1 was found", errRequestFirstRide.Error())
+	})
 }
