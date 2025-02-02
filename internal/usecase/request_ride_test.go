@@ -1,0 +1,87 @@
+package usecase
+
+import (
+	"rider-go/internal/entity"
+	"rider-go/internal/infra/database"
+	"testing"
+
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+)
+
+func TestRequestRide(t *testing.T) {
+	t.Run("It shouldn't request a ride for an account that doesn't have passenge flag as true", func(t *testing.T) {
+
+		signUpInput := SignUpInput{
+			Name:        "John Doe",
+			Cpf:         "999-999-999-99",
+			Email:       "johndoe@gmail.com",
+			Password:    "123123",
+			IsPassenger: false,
+			IsDriver:    false,
+		}
+
+		accountRepository := database.NewAccountRepository(make([]entity.Account, 0))
+		signUpUseCase := NewSignUpUseCase(accountRepository)
+		signUpOutput, errSignup := signUpUseCase.Execute(signUpInput)
+
+		requestRideInput := RequestRideInput{
+			PassengerId: signUpOutput.Id,
+			From: entity.GeoLocation{
+				Lat: 49,
+				Lon: 45,
+			},
+			To: entity.GeoLocation{
+				Lat: 50,
+				Lon: 45,
+			},
+		}
+
+		rideRepository := database.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
+		requestRideOutput, errRequestRide := requestRideUseCase.Execute(requestRideInput)
+
+		assert.Nil(t, errSignup)
+		assert.Equal(t, "to request a ride the account has to have passenger flag marked as true", errRequestRide.Error())
+		assert.Equal(t, uuid.Nil, requestRideOutput.RideId)
+	})
+
+	t.Run("It shouldn't request a ride for a passenger that has a ride with status different than completed", func(t *testing.T) {
+
+		signUpInput := SignUpInput{
+			Name:        "John Doe",
+			Cpf:         "999-999-999-99",
+			Email:       "johndoe@gmail.com",
+			Password:    "123123",
+			IsPassenger: true,
+			IsDriver:    false,
+		}
+
+		accountRepository := database.NewAccountRepository(make([]entity.Account, 0))
+		signUpUseCase := NewSignUpUseCase(accountRepository)
+		signUpOutput, errSignup := signUpUseCase.Execute(signUpInput)
+
+		requestRideInput := RequestRideInput{
+			PassengerId: signUpOutput.Id,
+			From: entity.GeoLocation{
+				Lat: 49,
+				Lon: 45,
+			},
+			To: entity.GeoLocation{
+				Lat: 50,
+				Lon: 45,
+			},
+		}
+
+		rideRepository := database.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
+		requestRideOutputFirst, errRequestFirstRide := requestRideUseCase.Execute(requestRideInput)
+		requestRideOutputSecond, errRequestSecondRide := requestRideUseCase.Execute(requestRideInput)
+
+		assert.Nil(t, errSignup)
+		assert.Nil(t, errRequestFirstRide)
+		assert.NotEqual(t, uuid.Nil, requestRideOutputFirst.RideId)
+		assert.Equal(t, "to request a ride the passenger's last ride must be completed", errRequestSecondRide.Error())
+		assert.Equal(t, uuid.Nil, requestRideOutputSecond.RideId)
+	})
+}

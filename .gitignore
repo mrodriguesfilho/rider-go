@@ -1,0 +1,6 @@
+.DS_Store
+.vscode
+config.json
+go.sum
+docker-compose.yaml
+.idea

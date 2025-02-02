@@ -1,0 +1,11 @@
+  POST http://localhost:8080/account/signup HTTP/1.1
+  Content-Type: application/json
+
+  {
+    "Name": "John Doe",
+    "Cpf": "999-999-999-99",
+    "Email": "johndoe@gmail.com",
+    "Password": "123123",
+    "IsPassenger": true,
+    "IsDriver": false
+  }
