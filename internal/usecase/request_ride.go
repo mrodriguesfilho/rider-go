@@ -9,7 +9,7 @@ import (
 )
 
 type RequestRideUseCase struct {
-	AccountRepository *database.AccountRepositoryInMemory
+	AccountRepository database.AccountRepository
 	RideRepository    database.RideRepository
 }
 
@@ -23,7 +23,7 @@ type RequestRideOutput struct {
 	RideId uuid.UUID
 }
 
-func NewRequestRideUseCase(accountRepository *database.AccountRepositoryInMemory, rideRepository database.RideRepository) *RequestRideUseCase {
+func NewRequestRideUseCase(accountRepository database.AccountRepository, rideRepository database.RideRepository) *RequestRideUseCase {
 	return &RequestRideUseCase{
 		AccountRepository: accountRepository,
 		RideRepository:    rideRepository,

@@ -8,7 +8,7 @@ import (
 )
 
 type SignUpUseCase struct {
-	AccountRepository *database.AccountRepositoryInMemory
+	AccountRepository database.AccountRepository
 }
 
 type SignUpInput struct {
@@ -29,7 +29,7 @@ type SignUpOutput struct {
 	IsDriver    bool
 }
 
-func NewSignUpUseCase(accountRepository *database.AccountRepositoryInMemory) *SignUpUseCase {
+func NewSignUpUseCase(accountRepository database.AccountRepository) *SignUpUseCase {
 	return &SignUpUseCase{
 		AccountRepository: accountRepository,
 	}
