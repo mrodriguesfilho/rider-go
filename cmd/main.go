@@ -16,6 +16,8 @@ func main() {
 		fx.Provide(NewAccountRepositoryWithDb),
 		fx.Provide(usecase.NewSignUpUseCase),
 		fx.Provide(handlers.NewSignUpHandler),
+		fx.Provide(usecase.NewGetAccountUseCase),
+		fx.Provide(handlers.NewGetAccountHandler),
 		fx.Provide(router.NewChiRouter),
 		fx.Invoke(router.StartServer),
 	)

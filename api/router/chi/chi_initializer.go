@@ -10,10 +10,11 @@ import (
 	"go.uber.org/fx"
 )
 
-func NewChiRouter(signUpHandler *handlers.SignUpHandler) *chi.Mux {
+func NewChiRouter(signUpHandler *handlers.SignUpHandler, getAccountHandler *handlers.GetAccountHandler) *chi.Mux {
 	r := chi.NewRouter()
 	r.Route("/account", func(r chi.Router) {
 		r.Post("/signup", signUpHandler.Handle)
+		r.Get("/", getAccountHandler.Handle)
 	})
 	return r
 }
