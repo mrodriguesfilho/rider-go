@@ -2,9 +2,9 @@ package router
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"rider-go/api/handlers"
+	"rider-go/internal/logger"
 
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/fx"
@@ -19,7 +19,7 @@ func NewChiRouter(signUpHandler *handlers.SignUpHandler, getAccountHandler *hand
 	return r
 }
 
-func StartServer(lc fx.Lifecycle, router *chi.Mux) {
+func StartServer(lc fx.Lifecycle, logger logger.CustomLogger, router *chi.Mux) {
 	server := &http.Server{
 		Addr:    ":8080",
 		Handler: router,
@@ -27,12 +27,12 @@ func StartServer(lc fx.Lifecycle, router *chi.Mux) {
 
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			log.Printf("Started server")
+			logger.Info("Started server")
 			go server.ListenAndServe()
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
-			log.Printf("Stopping server")
+			logger.Info("Stopping server")
 			return server.Shutdown(ctx)
 		},
 	})
