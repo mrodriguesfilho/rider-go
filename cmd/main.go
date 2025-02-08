@@ -5,6 +5,7 @@ import (
 	router "rider-go/api/router/chi"
 	"rider-go/internal/entity"
 	"rider-go/internal/infra/database"
+	"rider-go/internal/logger"
 	"rider-go/internal/usecase"
 
 	"go.uber.org/fx"
@@ -19,12 +20,13 @@ func main() {
 		fx.Provide(usecase.NewGetAccountUseCase),
 		fx.Provide(handlers.NewGetAccountHandler),
 		fx.Provide(router.NewChiRouter),
+		fx.Provide(logger.NewLogger),
 		fx.Invoke(router.StartServer),
 	)
 
 	app.Run()
 }
 
-func NewAccountRepositoryWithDb() *database.AccountRepositoryInMemory {
+func NewAccountRepositoryWithDb() database.AccountRepository {
 	return database.NewAccountRepository(make([]entity.Account, 0))
 }
