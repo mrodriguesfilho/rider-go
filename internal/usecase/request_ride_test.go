@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"fmt"
 	"rider-go/internal/entity"
 	"rider-go/internal/infra/database"
 	"testing"
@@ -87,9 +88,10 @@ func TestRequestRide(t *testing.T) {
 
 	t.Run("It shouldn't request a ride for an account that doesn't exists", func(t *testing.T) {
 
+		id, _ := uuid.NewRandom()
 		accountRepository := database.NewAccountRepository(make([]entity.Account, 0))
 		requestRideInput := RequestRideInput{
-			PassengerId: 1,
+			PassengerId: id.String(),
 			From: entity.GeoLocation{
 				Lat: 49,
 				Lon: 45,
@@ -106,6 +108,6 @@ func TestRequestRide(t *testing.T) {
 
 		assert.NotNil(t, errRequestFirstRide)
 		assert.Equal(t, uuid.Nil, requestRideOutputFirst.RideId)
-		assert.Equal(t, "no account with id 1 was found", errRequestFirstRide.Error())
+		assert.Equal(t, fmt.Sprintf("no account with id %d was found", id), errRequestFirstRide.Error())
 	})
 }

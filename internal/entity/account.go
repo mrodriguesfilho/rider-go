@@ -2,10 +2,12 @@ package entity
 
 import (
 	"errors"
+
+	"github.com/google/uuid"
 )
 
 type Account struct {
-	Id          int
+	Id          uuid.UUID
 	Name        string
 	Cpf         string
 	Email       string
@@ -18,6 +20,7 @@ type Account struct {
 func NewAccount(name, cpf, email, password string, isPassenger, isDriver bool) *Account {
 
 	account := Account{
+		Id:          uuid.New(),
 		Name:        name,
 		Cpf:         cpf,
 		Email:       email,

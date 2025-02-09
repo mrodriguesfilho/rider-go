@@ -14,7 +14,7 @@ type RequestRideUseCase struct {
 }
 
 type RequestRideInput struct {
-	PassengerId int
+	PassengerId string
 	From        entity.GeoLocation
 	To          entity.GeoLocation
 }
@@ -32,7 +32,13 @@ func NewRequestRideUseCase(accountRepository database.AccountRepository, rideRep
 
 func (r *RequestRideUseCase) Execute(requestRideInput RequestRideInput) (RequestRideOutput, error) {
 
-	passenger, err := r.AccountRepository.GetById(requestRideInput.PassengerId)
+	idParsed, err := uuid.Parse(requestRideInput.PassengerId)
+
+	if err != nil {
+		return RequestRideOutput{}, fmt.Errorf("id was in invalid format. execpected uuid got %s", requestRideInput.PassengerId)
+	}
+
+	passenger, err := r.AccountRepository.GetById(idParsed)
 
 	if err != nil {
 		return RequestRideOutput{}, err
@@ -42,7 +48,7 @@ func (r *RequestRideUseCase) Execute(requestRideInput RequestRideInput) (Request
 		return RequestRideOutput{}, fmt.Errorf("to request a ride the account has to have passenger flag marked as true")
 	}
 
-	lastRide, err := r.RideRepository.GetLastRideByPassengerId(passenger.Id)
+	lastRide, err := r.RideRepository.GetLastRideByPassengerId(idParsed)
 
 	if err != nil {
 		return RequestRideOutput{}, err
@@ -52,7 +58,7 @@ func (r *RequestRideUseCase) Execute(requestRideInput RequestRideInput) (Request
 		return RequestRideOutput{}, fmt.Errorf("to request a ride the passenger's last ride must be completed")
 	}
 
-	newRide := entity.NewRide(requestRideInput.PassengerId, requestRideInput.From, requestRideInput.To)
+	newRide := entity.NewRide(passenger.Id, requestRideInput.From, requestRideInput.To)
 
 	err = r.RideRepository.Insert(newRide)
 

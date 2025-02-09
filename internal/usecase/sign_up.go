@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"rider-go/internal/entity"
 	"rider-go/internal/infra/database"
+
+	"github.com/google/uuid"
 )
 
 type SignUpUseCase struct {
@@ -21,7 +23,7 @@ type SignUpInput struct {
 }
 
 type SignUpOutput struct {
-	Id          int
+	Id          string
 	Name        string
 	Cpf         string
 	Email       string
@@ -39,7 +41,7 @@ func (s *SignUpUseCase) Execute(input SignUpInput) (SignUpOutput, error) {
 
 	accountAlreadyExist, _ := s.AccountRepository.GetByEmail(input.Email)
 
-	if accountAlreadyExist.Id != 0 {
+	if accountAlreadyExist.Id != uuid.Nil {
 		errorMsg := fmt.Sprintf("%s already signed up on our database", input.Email)
 		return SignUpOutput{}, errors.New(errorMsg)
 	}
@@ -49,7 +51,7 @@ func (s *SignUpUseCase) Execute(input SignUpInput) (SignUpOutput, error) {
 	s.AccountRepository.Insert(account)
 
 	return SignUpOutput{
-		Id:          account.Id,
+		Id:          account.Id.String(),
 		Name:        account.Name,
 		Cpf:         account.Cpf,
 		Email:       account.Email,

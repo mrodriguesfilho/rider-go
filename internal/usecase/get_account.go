@@ -11,7 +11,7 @@ type GetAccountInput struct {
 }
 
 type GetAccountOutput struct {
-	Id          int
+	Id          string
 	Name        string
 	Cpf         string
 	Email       string
@@ -34,7 +34,7 @@ func (g *GetAccountUsecase) Execute(getAccountInput GetAccountInput) (GetAccount
 	}
 
 	return GetAccountOutput{
-		Id:          account.Id,
+		Id:          account.Id.String(),
 		Name:        account.Name,
 		Cpf:         account.Cpf,
 		Email:       account.Email,

@@ -12,13 +12,13 @@ const (
 
 type Ride struct {
 	Status      RideStatus
-	PassengerId int
+	PassengerId uuid.UUID
 	Id          uuid.UUID
 	From        GeoLocation
 	To          GeoLocation
 }
 
-func NewRide(passengerId int, from GeoLocation, to GeoLocation) *Ride {
+func NewRide(passengerId uuid.UUID, from GeoLocation, to GeoLocation) *Ride {
 	return &Ride{
 		Id:          uuid.New(),
 		PassengerId: passengerId,
