@@ -9,8 +9,8 @@ import (
 )
 
 type RequestRideUseCase struct {
-	AccountRepository database.AccountRepository
-	RideRepository    database.RideRepository
+	accountRepository database.AccountRepository
+	rideRepository    database.RideRepository
 }
 
 type RequestRideInput struct {
@@ -25,8 +25,8 @@ type RequestRideOutput struct {
 
 func NewRequestRideUseCase(accountRepository database.AccountRepository, rideRepository database.RideRepository) *RequestRideUseCase {
 	return &RequestRideUseCase{
-		AccountRepository: accountRepository,
-		RideRepository:    rideRepository,
+		accountRepository: accountRepository,
+		rideRepository:    rideRepository,
 	}
 }
 
@@ -38,7 +38,7 @@ func (r *RequestRideUseCase) Execute(requestRideInput RequestRideInput) (Request
 		return RequestRideOutput{}, fmt.Errorf("id was in invalid format. execpected uuid got %s", requestRideInput.PassengerId)
 	}
 
-	passenger, err := r.AccountRepository.GetById(idParsed)
+	passenger, err := r.accountRepository.GetById(idParsed)
 
 	if err != nil {
 		return RequestRideOutput{}, err
@@ -48,7 +48,7 @@ func (r *RequestRideUseCase) Execute(requestRideInput RequestRideInput) (Request
 		return RequestRideOutput{}, fmt.Errorf("to request a ride the account has to have passenger flag marked as true")
 	}
 
-	lastRide, err := r.RideRepository.GetLastRideByPassengerId(idParsed)
+	lastRide, err := r.rideRepository.GetLasRideByAccountId(idParsed)
 
 	if err != nil {
 		return RequestRideOutput{}, err
@@ -60,7 +60,7 @@ func (r *RequestRideUseCase) Execute(requestRideInput RequestRideInput) (Request
 
 	newRide := entity.NewRide(passenger.Id, requestRideInput.From, requestRideInput.To)
 
-	err = r.RideRepository.Insert(newRide)
+	err = r.rideRepository.Insert(newRide)
 
 	if err != nil {
 		return RequestRideOutput{}, err

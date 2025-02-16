@@ -3,7 +3,7 @@ package usecase
 import "rider-go/internal/infra/database"
 
 type GetAccountUsecase struct {
-	AccountRepository database.AccountRepository
+	accountRepository database.AccountRepository
 }
 
 type GetAccountInput struct {
@@ -13,7 +13,6 @@ type GetAccountInput struct {
 type GetAccountOutput struct {
 	Id          string
 	Name        string
-	Cpf         string
 	Email       string
 	IsPassenger bool
 	IsDriver    bool
@@ -21,13 +20,13 @@ type GetAccountOutput struct {
 
 func NewGetAccountUseCase(accountRepository database.AccountRepository) *GetAccountUsecase {
 	return &GetAccountUsecase{
-		AccountRepository: accountRepository,
+		accountRepository: accountRepository,
 	}
 }
 
 func (g *GetAccountUsecase) Execute(getAccountInput GetAccountInput) (GetAccountOutput, error) {
 
-	account, err := g.AccountRepository.GetByEmail(getAccountInput.Email)
+	account, err := g.accountRepository.GetByEmail(getAccountInput.Email)
 
 	if err != nil {
 		return GetAccountOutput{}, err
@@ -36,7 +35,6 @@ func (g *GetAccountUsecase) Execute(getAccountInput GetAccountInput) (GetAccount
 	return GetAccountOutput{
 		Id:          account.Id.String(),
 		Name:        account.Name,
-		Cpf:         account.Cpf,
 		Email:       account.Email,
 		IsPassenger: account.IsPassenger,
 		IsDriver:    account.IsDriver,

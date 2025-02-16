@@ -7,6 +7,7 @@ import (
 )
 
 type RideRepository interface {
-	GetLastRideByPassengerId(passengerId uuid.UUID) (entity.Ride, error)
+	GetById(rideId uuid.UUID) (entity.Ride, error)
+	GetLasRideByAccountId(passengerId uuid.UUID) (entity.Ride, error)
 	Insert(ride *entity.Ride) error
 }
