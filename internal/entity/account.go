@@ -9,20 +9,19 @@ import (
 type Account struct {
 	Id          uuid.UUID
 	Name        string
-	Cpf         string
 	Email       string
 	Password    string
 	IsPassenger bool
 	IsDriver    bool
 	Validation  Validation
+	RideHistory []Ride
 }
 
-func NewAccount(name, cpf, email, password string, isPassenger, isDriver bool) *Account {
+func NewAccount(name, email, password string, isPassenger, isDriver bool) *Account {
 
 	account := Account{
 		Id:          uuid.New(),
 		Name:        name,
-		Cpf:         cpf,
 		Email:       email,
 		Password:    password,
 		IsPassenger: isPassenger,
@@ -40,10 +39,6 @@ func (a *Account) Validate() {
 
 	if a.Name == "" {
 		validation.Errors = append(validation.Errors, errors.New("name property is required for Account type"))
-	}
-
-	if a.Cpf == "" {
-		validation.Errors = append(validation.Errors, errors.New("cpf property is required for Account type"))
 	}
 
 	if a.Email == "" {

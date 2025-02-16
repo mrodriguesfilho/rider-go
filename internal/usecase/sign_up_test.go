@@ -12,7 +12,6 @@ func TestSignUpUseCase(t *testing.T) {
 	t.Run("It should create a valid account", func(t *testing.T) {
 		signUpInput := SignUpInput{
 			Name:        "John Doe",
-			Cpf:         "999-999-999-99",
 			Email:       "johndoe@gmail.com",
 			Password:    "123123",
 			IsPassenger: true,
@@ -31,7 +30,6 @@ func TestSignUpUseCase(t *testing.T) {
 	t.Run("It shouldn't create an account with e-mail already used", func(t *testing.T) {
 		signUpInput := SignUpInput{
 			Name:        "John Doe",
-			Cpf:         "999-999-999-99",
 			Email:       "johndoe@gmail.com",
 			Password:    "123123",
 			IsPassenger: true,

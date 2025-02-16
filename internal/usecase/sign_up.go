@@ -10,12 +10,11 @@ import (
 )
 
 type SignUpUseCase struct {
-	AccountRepository database.AccountRepository
+	accountRepository database.AccountRepository
 }
 
 type SignUpInput struct {
 	Name        string
-	Cpf         string
 	Email       string
 	Password    string
 	IsPassenger bool
@@ -25,7 +24,6 @@ type SignUpInput struct {
 type SignUpOutput struct {
 	Id          string
 	Name        string
-	Cpf         string
 	Email       string
 	IsPassenger bool
 	IsDriver    bool
@@ -33,27 +31,26 @@ type SignUpOutput struct {
 
 func NewSignUpUseCase(accountRepository database.AccountRepository) *SignUpUseCase {
 	return &SignUpUseCase{
-		AccountRepository: accountRepository,
+		accountRepository: accountRepository,
 	}
 }
 
 func (s *SignUpUseCase) Execute(input SignUpInput) (SignUpOutput, error) {
 
-	accountAlreadyExist, _ := s.AccountRepository.GetByEmail(input.Email)
+	accountAlreadyExist, _ := s.accountRepository.GetByEmail(input.Email)
 
 	if accountAlreadyExist.Id != uuid.Nil {
 		errorMsg := fmt.Sprintf("%s already signed up on our database", input.Email)
 		return SignUpOutput{}, errors.New(errorMsg)
 	}
 
-	account := entity.NewAccount(input.Name, input.Cpf, input.Email, input.Password, input.IsPassenger, input.IsDriver)
+	account := entity.NewAccount(input.Name, input.Email, input.Password, input.IsPassenger, input.IsDriver)
 
-	s.AccountRepository.Insert(account)
+	s.accountRepository.Insert(account)
 
 	return SignUpOutput{
 		Id:          account.Id.String(),
 		Name:        account.Name,
-		Cpf:         account.Cpf,
 		Email:       account.Email,
 		IsPassenger: account.IsPassenger,
 		IsDriver:    account.IsDriver,

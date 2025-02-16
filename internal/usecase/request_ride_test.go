@@ -11,11 +11,43 @@ import (
 )
 
 func TestRequestRide(t *testing.T) {
+	t.Run("It should request a ride", func(t *testing.T) {
+		signUpInput := SignUpInput{
+			Name:        "John Doe",
+			Email:       "johndoe@gmail.com",
+			Password:    "123123",
+			IsPassenger: true,
+			IsDriver:    false,
+		}
+
+		accountRepository := database.NewAccountRepository(make([]entity.Account, 0))
+		signUpUseCase := NewSignUpUseCase(accountRepository)
+		signUpOutput, errSignup := signUpUseCase.Execute(signUpInput)
+
+		requestRideInput := RequestRideInput{
+			PassengerId: signUpOutput.Id,
+			From: entity.GeoLocation{
+				Lat: 49,
+				Lon: 45,
+			},
+			To: entity.GeoLocation{
+				Lat: 50,
+				Lon: 45,
+			},
+		}
+
+		rideRepository := database.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
+		requestRideOutput, _ := requestRideUseCase.Execute(requestRideInput)
+
+		assert.Nil(t, errSignup)
+		assert.NotEqual(t, uuid.Nil, requestRideOutput.RideId)
+	})
+
 	t.Run("It shouldn't request a ride for an account that doesn't have passenge flag as true", func(t *testing.T) {
 
 		signUpInput := SignUpInput{
 			Name:        "John Doe",
-			Cpf:         "999-999-999-99",
 			Email:       "johndoe@gmail.com",
 			Password:    "123123",
 			IsPassenger: false,
@@ -51,7 +83,6 @@ func TestRequestRide(t *testing.T) {
 
 		signUpInput := SignUpInput{
 			Name:        "John Doe",
-			Cpf:         "999-999-999-99",
 			Email:       "johndoe@gmail.com",
 			Password:    "123123",
 			IsPassenger: true,
