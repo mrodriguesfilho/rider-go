@@ -2,7 +2,9 @@ package usecase
 
 import (
 	"fmt"
+	"rider-go/internal/entity"
 	"rider-go/internal/infra/database"
+	"sync"
 
 	"github.com/google/uuid"
 )
@@ -30,37 +32,52 @@ func NewAcceptRideUseCase(accountRepository database.AccountRepository, rideRepo
 
 func (a *AcceptRide) Execute(acceptRideInput AcceptRideInput) (AcceptRideOutput, error) {
 
-	accountUuid, err := uuid.Parse(acceptRideInput.DriverId)
+	accountUuid, parseErr := uuid.Parse(acceptRideInput.DriverId)
 
-	if err != nil {
+	if parseErr != nil {
 		return AcceptRideOutput{}, fmt.Errorf("cannot parse the received account id %s to uuid", acceptRideInput.DriverId)
 	}
 
-	driverAccount, err := a.accountRepository.GetById(accountUuid)
+	rideUuid, parseErr := uuid.Parse(acceptRideInput.RideId)
 
-	if err != nil {
-		return AcceptRideOutput{}, err
-	}
-
-	rideUuid, err := uuid.Parse(acceptRideInput.RideId)
-
-	if err != nil {
+	if parseErr != nil {
 		return AcceptRideOutput{}, fmt.Errorf("cannot parse the received ride id %s to uuid", acceptRideInput.RideId)
 	}
 
-	ride, err := a.rideRepository.GetById(rideUuid)
+	var wg sync.WaitGroup
+	var driverAccount entity.Account
+	var ride entity.Ride
+	var driverAccountErr, rideErr error
 
-	if err != nil {
-		return AcceptRideOutput{}, err
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		driverAccount, driverAccountErr = a.accountRepository.GetById(accountUuid)
+	}()
+
+	go func() {
+		defer wg.Done()
+		ride, rideErr = a.rideRepository.GetById(rideUuid)
+	}()
+
+	wg.Wait()
+
+	if driverAccountErr != nil {
+		return AcceptRideOutput{}, driverAccountErr
 	}
 
-	err = ride.AcceptRide(&driverAccount)
+	if rideErr != nil {
+		return AcceptRideOutput{}, rideErr
+	}
 
-	if err != nil {
-		return AcceptRideOutput{}, err
+	acceptRideErr := ride.AcceptRide(driverAccount)
+
+	if acceptRideErr != nil {
+		return AcceptRideOutput{}, acceptRideErr
 	}
 
 	return AcceptRideOutput{
-		DriverId: driverAccount.Id.String(),
+		DriverId: ride.DriverId.String(),
 	}, nil
 }

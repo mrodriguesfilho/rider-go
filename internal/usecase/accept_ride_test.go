@@ -116,8 +116,7 @@ func TestAcceptRideUseCase(t *testing.T) {
 		acceptRideUseCase := NewAcceptRideUseCase(accountRepository, rideRepository)
 		acceptRideOuput, err := acceptRideUseCase.Execute(acceptRideInput)
 
-		assert.NotNil(t, uuid.Nil, acceptRideOuput.DriverId)
-		assert.Equal(t, uuid.Nil, acceptRideOuput.DriverId)
+		assert.Equal(t, "", acceptRideOuput.DriverId)
 		assert.Equal(t, "an account cannot accept a ride without driver flag marked as true", err.Error())
 	})
 }

@@ -38,7 +38,7 @@ func (r *Ride) StatusAllowedToRequestNewRide() bool {
 	return r.Status == Completed
 }
 
-func (r *Ride) AcceptRide(driverAccount *Account) error {
+func (r *Ride) AcceptRide(driverAccount Account) error {
 	if !driverAccount.IsDriver {
 		return errors.New("an account cannot accept a ride without driver flag marked as true")
 	}
