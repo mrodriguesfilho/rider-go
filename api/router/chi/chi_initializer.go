@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 	"rider-go/api/handlers"
-	"rider-go/internal/logger"
+	"rider-go/internal/infra/logger"
 
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/fx"
