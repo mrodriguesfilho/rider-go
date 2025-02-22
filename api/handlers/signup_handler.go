@@ -3,8 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
+	"rider-go/internal/application/usecase"
 	"rider-go/internal/infra/logger"
-	"rider-go/internal/usecase"
 )
 
 type SignUpHandler struct {

@@ -1,7 +1,7 @@
-package database
+package repository
 
 import (
-	"rider-go/internal/entity"
+	"rider-go/internal/domain/entity"
 
 	"github.com/google/uuid"
 )

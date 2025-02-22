@@ -3,12 +3,13 @@ package main
 import (
 	"context"
 	"rider-go/api/handlers"
-	router "rider-go/api/router/chi"
-	"rider-go/internal/entity"
-	"rider-go/internal/infra/database"
+	"rider-go/internal/application/usecase"
+	"rider-go/internal/domain/entity"
+	inmemory "rider-go/internal/infra/database/InMemory"
+	"rider-go/internal/infra/database/repository"
 	"rider-go/internal/infra/logger"
 	"rider-go/internal/infra/otel"
-	"rider-go/internal/usecase"
+	"rider-go/internal/infra/router"
 
 	"go.uber.org/fx"
 )
@@ -37,6 +38,6 @@ func main() {
 	app.Run()
 }
 
-func NewAccountRepositoryWithDb() database.AccountRepository {
-	return database.NewAccountRepository(make([]entity.Account, 0))
+func NewAccountRepositoryWithDb() repository.AccountRepository {
+	return inmemory.NewAccountRepository(make([]entity.Account, 0))
 }

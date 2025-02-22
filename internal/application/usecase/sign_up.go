@@ -3,14 +3,14 @@ package usecase
 import (
 	"errors"
 	"fmt"
-	"rider-go/internal/entity"
-	"rider-go/internal/infra/database"
+	"rider-go/internal/domain/entity"
+	"rider-go/internal/infra/database/repository"
 
 	"github.com/google/uuid"
 )
 
 type SignUpUseCase struct {
-	accountRepository database.AccountRepository
+	accountRepository repository.AccountRepository
 }
 
 type SignUpInput struct {
@@ -29,7 +29,7 @@ type SignUpOutput struct {
 	IsDriver    bool
 }
 
-func NewSignUpUseCase(accountRepository database.AccountRepository) *SignUpUseCase {
+func NewSignUpUseCase(accountRepository repository.AccountRepository) *SignUpUseCase {
 	return &SignUpUseCase{
 		accountRepository: accountRepository,
 	}

@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"rider-go/internal/entity"
-	"rider-go/internal/infra/database"
+	"rider-go/internal/domain/entity"
+	inmemory "rider-go/internal/infra/database/InMemory"
 	"testing"
 
 	"github.com/google/uuid"
@@ -35,7 +35,7 @@ func TestAcceptRideUseCase(t *testing.T) {
 		inMemoryDatabase := make([]entity.Account, 0)
 		inMemoryDatabase = append(inMemoryDatabase, passengerAccount)
 		inMemoryDatabase = append(inMemoryDatabase, driverAccount)
-		accountRepository := database.NewAccountRepository(inMemoryDatabase)
+		accountRepository := inmemory.NewAccountRepository(inMemoryDatabase)
 
 		requestRideInput := RequestRideInput{
 			PassengerId: passengerAccount.Id.String(),
@@ -49,7 +49,7 @@ func TestAcceptRideUseCase(t *testing.T) {
 			},
 		}
 
-		rideRepository := database.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		rideRepository := inmemory.NewRideRepository(make(map[uuid.UUID]entity.Ride))
 		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
 		requestRideOuput, _ := requestRideUseCase.Execute(requestRideInput)
 
@@ -90,7 +90,7 @@ func TestAcceptRideUseCase(t *testing.T) {
 		inMemoryDatabase := make([]entity.Account, 0)
 		inMemoryDatabase = append(inMemoryDatabase, passengerAccount)
 		inMemoryDatabase = append(inMemoryDatabase, driverAccount)
-		accountRepository := database.NewAccountRepository(inMemoryDatabase)
+		accountRepository := inmemory.NewAccountRepository(inMemoryDatabase)
 
 		requestRideInput := RequestRideInput{
 			PassengerId: passengerAccount.Id.String(),
@@ -104,7 +104,7 @@ func TestAcceptRideUseCase(t *testing.T) {
 			},
 		}
 
-		rideRepository := database.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		rideRepository := inmemory.NewRideRepository(make(map[uuid.UUID]entity.Ride))
 		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
 		requestRideOuput, _ := requestRideUseCase.Execute(requestRideInput)
 

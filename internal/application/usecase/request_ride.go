@@ -2,15 +2,15 @@ package usecase
 
 import (
 	"fmt"
-	"rider-go/internal/entity"
-	"rider-go/internal/infra/database"
+	"rider-go/internal/domain/entity"
+	"rider-go/internal/infra/database/repository"
 
 	"github.com/google/uuid"
 )
 
 type RequestRideUseCase struct {
-	accountRepository database.AccountRepository
-	rideRepository    database.RideRepository
+	accountRepository repository.AccountRepository
+	rideRepository    repository.RideRepository
 }
 
 type RequestRideInput struct {
@@ -23,7 +23,7 @@ type RequestRideOutput struct {
 	RideId uuid.UUID
 }
 
-func NewRequestRideUseCase(accountRepository database.AccountRepository, rideRepository database.RideRepository) *RequestRideUseCase {
+func NewRequestRideUseCase(accountRepository repository.AccountRepository, rideRepository repository.RideRepository) *RequestRideUseCase {
 	return &RequestRideUseCase{
 		accountRepository: accountRepository,
 		rideRepository:    rideRepository,

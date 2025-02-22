@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"net/http"
-	"rider-go/internal/usecase"
+	"rider-go/internal/application/usecase"
 )
 
 type GetAccountHandler struct {

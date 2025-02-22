@@ -2,16 +2,16 @@ package usecase
 
 import (
 	"fmt"
-	"rider-go/internal/entity"
-	"rider-go/internal/infra/database"
+	"rider-go/internal/domain/entity"
+	"rider-go/internal/infra/database/repository"
 	"sync"
 
 	"github.com/google/uuid"
 )
 
 type AcceptRide struct {
-	accountRepository database.AccountRepository
-	rideRepository    database.RideRepository
+	accountRepository repository.AccountRepository
+	rideRepository    repository.RideRepository
 }
 
 type AcceptRideInput struct {
@@ -23,7 +23,7 @@ type AcceptRideOutput struct {
 	DriverId string
 }
 
-func NewAcceptRideUseCase(accountRepository database.AccountRepository, rideRepository database.RideRepository) *AcceptRide {
+func NewAcceptRideUseCase(accountRepository repository.AccountRepository, rideRepository repository.RideRepository) *AcceptRide {
 	return &AcceptRide{
 		accountRepository: accountRepository,
 		rideRepository:    rideRepository,

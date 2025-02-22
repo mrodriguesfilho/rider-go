@@ -2,8 +2,8 @@ package usecase
 
 import (
 	"fmt"
-	"rider-go/internal/entity"
-	"rider-go/internal/infra/database"
+	"rider-go/internal/domain/entity"
+	inmemory "rider-go/internal/infra/database/InMemory"
 	"testing"
 
 	"github.com/google/uuid"
@@ -20,7 +20,7 @@ func TestRequestRide(t *testing.T) {
 			IsDriver:    false,
 		}
 
-		accountRepository := database.NewAccountRepository(make([]entity.Account, 0))
+		accountRepository := inmemory.NewAccountRepository(make([]entity.Account, 0))
 		signUpUseCase := NewSignUpUseCase(accountRepository)
 		signUpOutput, errSignup := signUpUseCase.Execute(signUpInput)
 
@@ -36,7 +36,7 @@ func TestRequestRide(t *testing.T) {
 			},
 		}
 
-		rideRepository := database.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		rideRepository := inmemory.NewRideRepository(make(map[uuid.UUID]entity.Ride))
 		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
 		requestRideOutput, _ := requestRideUseCase.Execute(requestRideInput)
 
@@ -54,7 +54,7 @@ func TestRequestRide(t *testing.T) {
 			IsDriver:    false,
 		}
 
-		accountRepository := database.NewAccountRepository(make([]entity.Account, 0))
+		accountRepository := inmemory.NewAccountRepository(make([]entity.Account, 0))
 		signUpUseCase := NewSignUpUseCase(accountRepository)
 		signUpOutput, errSignup := signUpUseCase.Execute(signUpInput)
 
@@ -70,7 +70,7 @@ func TestRequestRide(t *testing.T) {
 			},
 		}
 
-		rideRepository := database.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		rideRepository := inmemory.NewRideRepository(make(map[uuid.UUID]entity.Ride))
 		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
 		requestRideOutput, errRequestRide := requestRideUseCase.Execute(requestRideInput)
 
@@ -89,7 +89,7 @@ func TestRequestRide(t *testing.T) {
 			IsDriver:    false,
 		}
 
-		accountRepository := database.NewAccountRepository(make([]entity.Account, 0))
+		accountRepository := inmemory.NewAccountRepository(make([]entity.Account, 0))
 		signUpUseCase := NewSignUpUseCase(accountRepository)
 		signUpOutput, errSignup := signUpUseCase.Execute(signUpInput)
 
@@ -105,7 +105,7 @@ func TestRequestRide(t *testing.T) {
 			},
 		}
 
-		rideRepository := database.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		rideRepository := inmemory.NewRideRepository(make(map[uuid.UUID]entity.Ride))
 		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
 		requestRideOutputFirst, errRequestFirstRide := requestRideUseCase.Execute(requestRideInput)
 		requestRideOutputSecond, errRequestSecondRide := requestRideUseCase.Execute(requestRideInput)
@@ -120,7 +120,7 @@ func TestRequestRide(t *testing.T) {
 	t.Run("It shouldn't request a ride for an account that doesn't exists", func(t *testing.T) {
 
 		id, _ := uuid.NewRandom()
-		accountRepository := database.NewAccountRepository(make([]entity.Account, 0))
+		accountRepository := inmemory.NewAccountRepository(make([]entity.Account, 0))
 		requestRideInput := RequestRideInput{
 			PassengerId: id.String(),
 			From: entity.GeoLocation{
@@ -133,7 +133,7 @@ func TestRequestRide(t *testing.T) {
 			},
 		}
 
-		rideRepository := database.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		rideRepository := inmemory.NewRideRepository(make(map[uuid.UUID]entity.Ride))
 		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
 		requestRideOutputFirst, errRequestFirstRide := requestRideUseCase.Execute(requestRideInput)
 

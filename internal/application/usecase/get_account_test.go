@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"rider-go/internal/entity"
-	"rider-go/internal/infra/database"
+	"rider-go/internal/domain/entity"
+	inmemory "rider-go/internal/infra/database/InMemory"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -18,7 +18,7 @@ func TestGetAccountUseCase(t *testing.T) {
 			IsDriver:    false,
 		}
 
-		accountRepository := database.NewAccountRepository(make([]entity.Account, 0))
+		accountRepository := inmemory.NewAccountRepository(make([]entity.Account, 0))
 		signUpUseCase := NewSignUpUseCase(accountRepository)
 		signUpOutput, signUpErr := signUpUseCase.Execute(signUpInput)
 
@@ -40,7 +40,7 @@ func TestGetAccountUseCase(t *testing.T) {
 
 	t.Run("It shouldn't retrieve an account that doesn't exists", func(t *testing.T) {
 
-		accountRepository := database.NewAccountRepository(make([]entity.Account, 0))
+		accountRepository := inmemory.NewAccountRepository(make([]entity.Account, 0))
 
 		getAccountUseCase := NewGetAccountUseCase(accountRepository)
 

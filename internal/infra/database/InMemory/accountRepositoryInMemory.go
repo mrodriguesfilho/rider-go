@@ -1,8 +1,8 @@
-package database
+package inmemory
 
 import (
 	"fmt"
-	"rider-go/internal/entity"
+	"rider-go/internal/domain/entity"
 
 	"github.com/google/uuid"
 )
