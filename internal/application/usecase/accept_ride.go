@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"rider-go/internal/application/event"
 	"rider-go/internal/domain/entity"
 	"rider-go/internal/infra/database/repository"
 	"sync"
@@ -9,9 +10,10 @@ import (
 	"github.com/google/uuid"
 )
 
-type AcceptRide struct {
+type AcceptRideUseCase struct {
 	accountRepository repository.AccountRepository
 	rideRepository    repository.RideRepository
+	eventDispatcher   event.EventDispatcher
 }
 
 type AcceptRideInput struct {
@@ -23,14 +25,15 @@ type AcceptRideOutput struct {
 	DriverId string
 }
 
-func NewAcceptRideUseCase(accountRepository repository.AccountRepository, rideRepository repository.RideRepository) *AcceptRide {
-	return &AcceptRide{
+func NewAcceptRideUseCase(accountRepository repository.AccountRepository, rideRepository repository.RideRepository, eventDispatcher event.EventDispatcher) *AcceptRideUseCase {
+	return &AcceptRideUseCase{
 		accountRepository: accountRepository,
 		rideRepository:    rideRepository,
+		eventDispatcher:   eventDispatcher,
 	}
 }
 
-func (a *AcceptRide) Execute(acceptRideInput AcceptRideInput) (AcceptRideOutput, error) {
+func (a *AcceptRideUseCase) Execute(acceptRideInput AcceptRideInput) (AcceptRideOutput, error) {
 
 	accountUuid, parseErr := uuid.Parse(acceptRideInput.DriverId)
 
@@ -77,6 +80,9 @@ func (a *AcceptRide) Execute(acceptRideInput AcceptRideInput) (AcceptRideOutput,
 		return AcceptRideOutput{}, acceptRideErr
 	}
 
+	a.rideRepository.Update(ride)
+	a.eventDispatcher.Add(ride)
+	a.eventDispatcher.Commit()
 	return AcceptRideOutput{
 		DriverId: ride.DriverId.String(),
 	}, nil

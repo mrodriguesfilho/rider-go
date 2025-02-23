@@ -7,7 +7,7 @@ import (
 )
 
 type Account struct {
-	Id          uuid.UUID
+	*EntityRoot
 	Name        string
 	Email       string
 	Password    string
@@ -20,7 +20,7 @@ type Account struct {
 func NewAccount(name, email, password string, isPassenger, isDriver bool) *Account {
 
 	account := Account{
-		Id:          uuid.New(),
+		EntityRoot:  &EntityRoot{Id: uuid.New()},
 		Name:        name,
 		Email:       email,
 		Password:    password,

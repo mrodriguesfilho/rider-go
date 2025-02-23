@@ -3,7 +3,6 @@ package inmemory
 import (
 	"fmt"
 	"rider-go/internal/domain/entity"
-	"rider-go/internal/infra/database/repository"
 
 	"github.com/google/uuid"
 )
@@ -44,7 +43,14 @@ func (r *RideRepositoryInMemory) GetLasRideByAccountId(passengerId uuid.UUID) (e
 	return entity.Ride{}, nil
 }
 
-func NewRideRepository(db map[uuid.UUID]entity.Ride) repository.RideRepository {
+func (r *RideRepositoryInMemory) Update(ride entity.Ride) error {
+
+	r.db[ride.Id] = ride
+
+	return nil
+}
+
+func NewRideRepositoryInMemory(db map[uuid.UUID]entity.Ride) *RideRepositoryInMemory {
 	return &RideRepositoryInMemory{
 		db: db,
 	}

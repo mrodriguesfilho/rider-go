@@ -36,7 +36,7 @@ func TestRequestRide(t *testing.T) {
 			},
 		}
 
-		rideRepository := inmemory.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		rideRepository := inmemory.NewRideRepositoryInMemory(make(map[uuid.UUID]entity.Ride))
 		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
 		requestRideOutput, _ := requestRideUseCase.Execute(requestRideInput)
 
@@ -70,7 +70,7 @@ func TestRequestRide(t *testing.T) {
 			},
 		}
 
-		rideRepository := inmemory.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		rideRepository := inmemory.NewRideRepositoryInMemory(make(map[uuid.UUID]entity.Ride))
 		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
 		requestRideOutput, errRequestRide := requestRideUseCase.Execute(requestRideInput)
 
@@ -105,7 +105,7 @@ func TestRequestRide(t *testing.T) {
 			},
 		}
 
-		rideRepository := inmemory.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		rideRepository := inmemory.NewRideRepositoryInMemory(make(map[uuid.UUID]entity.Ride))
 		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
 		requestRideOutputFirst, errRequestFirstRide := requestRideUseCase.Execute(requestRideInput)
 		requestRideOutputSecond, errRequestSecondRide := requestRideUseCase.Execute(requestRideInput)
@@ -133,7 +133,7 @@ func TestRequestRide(t *testing.T) {
 			},
 		}
 
-		rideRepository := inmemory.NewRideRepository(make(map[uuid.UUID]entity.Ride))
+		rideRepository := inmemory.NewRideRepositoryInMemory(make(map[uuid.UUID]entity.Ride))
 		requestRideUseCase := NewRequestRideUseCase(accountRepository, rideRepository)
 		requestRideOutputFirst, errRequestFirstRide := requestRideUseCase.Execute(requestRideInput)
 

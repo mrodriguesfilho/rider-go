@@ -54,7 +54,7 @@ func (r *RequestRideUseCase) Execute(requestRideInput RequestRideInput) (Request
 		return RequestRideOutput{}, err
 	}
 
-	if lastRide.Id != uuid.Nil && !lastRide.StatusAllowedToRequestNewRide() {
+	if lastRide.EntityRoot != nil && lastRide.Id != uuid.Nil && !lastRide.StatusAllowedToRequestNewRide() {
 		return RequestRideOutput{}, fmt.Errorf("to request a ride the passenger's last ride must be completed")
 	}
 

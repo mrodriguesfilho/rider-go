@@ -2,6 +2,8 @@ package entity
 
 import (
 	"errors"
+	"rider-go/internal/domain/domainEvent"
+	"rider-go/internal/domain/valueObjects"
 
 	"github.com/google/uuid"
 )
@@ -16,21 +18,26 @@ const (
 )
 
 type Ride struct {
-	Id          uuid.UUID
+	*EntityRoot
 	Status      RideStatus
 	PassengerId uuid.UUID
 	DriverId    uuid.UUID
 	From        GeoLocation
 	To          GeoLocation
+	Fare        valueObjects.Money
+	DriverFare  valueObjects.Money
 }
 
 func NewRide(passengerId uuid.UUID, from GeoLocation, to GeoLocation) *Ride {
+
 	return &Ride{
-		Id:          uuid.New(),
+		EntityRoot:  &EntityRoot{Id: uuid.New()},
 		PassengerId: passengerId,
 		From:        from,
 		To:          to,
 		Status:      Requested,
+		Fare:        valueObjects.NewMoney(10, valueObjects.USD),
+		DriverFare:  valueObjects.NewMoney(8, valueObjects.USD),
 	}
 }
 
@@ -49,6 +56,8 @@ func (r *Ride) AcceptRide(driverAccount Account) error {
 
 	r.DriverId = driverAccount.Id
 	r.Status = Accepted
+
+	r.RaiseEvent(domainEvent.NewRideAcceptedEvent(r.Id))
 
 	return nil
 }

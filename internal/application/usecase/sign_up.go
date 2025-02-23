@@ -39,7 +39,7 @@ func (s *SignUpUseCase) Execute(input SignUpInput) (SignUpOutput, error) {
 
 	accountAlreadyExist, _ := s.accountRepository.GetByEmail(input.Email)
 
-	if accountAlreadyExist.Id != uuid.Nil {
+	if accountAlreadyExist.EntityRoot != nil && accountAlreadyExist.Id != uuid.Nil {
 		errorMsg := fmt.Sprintf("%s already signed up on our database", input.Email)
 		return SignUpOutput{}, errors.New(errorMsg)
 	}

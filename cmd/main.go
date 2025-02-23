@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"rider-go/api/handlers"
+	"rider-go/api/httpHandlers"
 	"rider-go/internal/application/usecase"
+	"rider-go/internal/domain/domainEvent"
 	"rider-go/internal/domain/entity"
 	inmemory "rider-go/internal/infra/database/InMemory"
 	"rider-go/internal/infra/database/repository"
@@ -25,11 +26,12 @@ func main() {
 	defer func() { _ = tp.Shutdown(context.Background()) }()
 
 	app := fx.New(
+		fx.Provide(NewEventChannel),
 		fx.Provide(NewAccountRepositoryWithDb),
 		fx.Provide(usecase.NewSignUpUseCase),
-		fx.Provide(handlers.NewSignUpHandler),
+		fx.Provide(httpHandlers.NewSignUpHandler),
 		fx.Provide(usecase.NewGetAccountUseCase),
-		fx.Provide(handlers.NewGetAccountHandler),
+		fx.Provide(httpHandlers.NewGetAccountHandler),
 		fx.Provide(router.NewChiRouter),
 		fx.Provide(logger.NewLogger),
 		fx.Invoke(router.StartServer),
@@ -40,4 +42,8 @@ func main() {
 
 func NewAccountRepositoryWithDb() repository.AccountRepository {
 	return inmemory.NewAccountRepository(make([]entity.Account, 0))
+}
+
+func NewEventChannel() chan domainEvent.DomainEventInterface {
+	return make(chan domainEvent.DomainEventInterface)
 }
