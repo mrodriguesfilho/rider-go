@@ -4,7 +4,7 @@ import (
 	"rider-go/internal/infra/database/repository"
 )
 
-type GetAccountUsecase struct {
+type GetAccount struct {
 	accountRepository repository.AccountRepository
 }
 
@@ -20,13 +20,13 @@ type GetAccountOutput struct {
 	IsDriver    bool
 }
 
-func NewGetAccountUseCase(accountRepository repository.AccountRepository) *GetAccountUsecase {
-	return &GetAccountUsecase{
+func NewGetAccountUseCase(accountRepository repository.AccountRepository) *GetAccount {
+	return &GetAccount{
 		accountRepository: accountRepository,
 	}
 }
 
-func (g *GetAccountUsecase) Execute(getAccountInput GetAccountInput) (GetAccountOutput, error) {
+func (g *GetAccount) Execute(getAccountInput GetAccountInput) (GetAccountOutput, error) {
 
 	account, err := g.accountRepository.GetByEmail(getAccountInput.Email)
 

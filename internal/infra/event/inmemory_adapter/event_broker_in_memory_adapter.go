@@ -1,4 +1,4 @@
-package eventAdapters
+package event_in_memory_adapter
 
 import (
 	"rider-go/internal/domain/domainEvent"

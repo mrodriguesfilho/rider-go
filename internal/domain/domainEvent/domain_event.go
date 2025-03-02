@@ -1,49 +1,53 @@
 package domainEvent
 
 import (
+	"encoding/json"
+
 	"github.com/google/uuid"
 )
 
 type DomainEventInterface interface {
-	EventName() string
+	GetEventName() string
 	IsCommited() bool
 	GetId() uuid.UUID
-	GetPayload() interface{}
+	GetPayload() string
 	MarkAsCommited()
 }
 
 type DomainEventType struct {
-	id        uuid.UUID
-	commited  bool
-	eventName string
-	payload   interface{}
+	Id        uuid.UUID
+	Commited  bool
+	EventName string
+	Payload   string
 }
 
-func NewDomainEvent(name string, payload interface{}) *DomainEventType {
+func NewDomainEvent(name string, payload any) *DomainEventType {
+
+	payloadString, _ := json.Marshal(payload)
 
 	return &DomainEventType{
-		id:        uuid.New(),
-		eventName: name,
-		payload:   payload,
+		Id:        uuid.New(),
+		EventName: name,
+		Payload:   string(payloadString),
 	}
 }
 
 func (r *DomainEventType) IsCommited() bool {
-	return r.commited
+	return r.Commited
 }
 
-func (r *DomainEventType) EventName() string {
-	return r.eventName
+func (r *DomainEventType) GetEventName() string {
+	return r.EventName
 }
 
 func (r *DomainEventType) GetId() uuid.UUID {
-	return r.id
+	return r.Id
 }
 
-func (r *DomainEventType) GetPayload() interface{} {
-	return r.payload
+func (r *DomainEventType) GetPayload() string {
+	return r.Payload
 }
 
 func (r *DomainEventType) MarkAsCommited() {
-	r.commited = true
+	r.Commited = true
 }

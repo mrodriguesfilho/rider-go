@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 	"rider-go/internal/domain/entity"
+	"rider-go/internal/domain/valueObjects"
 	"rider-go/internal/infra/database/repository"
 
 	"github.com/google/uuid"
@@ -15,8 +16,8 @@ type RequestRideUseCase struct {
 
 type RequestRideInput struct {
 	PassengerId string
-	From        entity.GeoLocation
-	To          entity.GeoLocation
+	From        valueObjects.GeoLocation
+	To          valueObjects.GeoLocation
 }
 
 type RequestRideOutput struct {

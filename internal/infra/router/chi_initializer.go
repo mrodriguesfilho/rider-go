@@ -3,14 +3,14 @@ package router
 import (
 	"context"
 	"net/http"
-	"rider-go/api/httpHandlers"
 	"rider-go/internal/infra/logger"
+	"rider-go/internal/interfaces/api"
 
 	"github.com/go-chi/chi/v5"
 	"go.uber.org/fx"
 )
 
-func NewChiRouter(signUpHandler *httpHandlers.SignUpHandler, getAccountHandler *httpHandlers.GetAccountHandler) *chi.Mux {
+func NewChiRouter(signUpHandler *api.SignUp, getAccountHandler *api.GetAccount) *chi.Mux {
 	r := chi.NewRouter()
 	r.Route("/account", func(r chi.Router) {
 		r.Post("/signup", signUpHandler.Handle)

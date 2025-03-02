@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 	"rider-go/internal/domain/entity"
+	"rider-go/internal/domain/valueObjects"
 	inmemory "rider-go/internal/infra/database/InMemory"
 	"testing"
 
@@ -26,14 +27,8 @@ func TestRequestRide(t *testing.T) {
 
 		requestRideInput := RequestRideInput{
 			PassengerId: signUpOutput.Id,
-			From: entity.GeoLocation{
-				Lat: 49,
-				Lon: 45,
-			},
-			To: entity.GeoLocation{
-				Lat: 50,
-				Lon: 45,
-			},
+			From:        valueObjects.NewGeoLocation(49, 45),
+			To:          valueObjects.NewGeoLocation(50, 45),
 		}
 
 		rideRepository := inmemory.NewRideRepositoryInMemory(make(map[uuid.UUID]entity.Ride))
@@ -60,14 +55,8 @@ func TestRequestRide(t *testing.T) {
 
 		requestRideInput := RequestRideInput{
 			PassengerId: signUpOutput.Id,
-			From: entity.GeoLocation{
-				Lat: 49,
-				Lon: 45,
-			},
-			To: entity.GeoLocation{
-				Lat: 50,
-				Lon: 45,
-			},
+			From:        valueObjects.NewGeoLocation(49, 45),
+			To:          valueObjects.NewGeoLocation(50, 45),
 		}
 
 		rideRepository := inmemory.NewRideRepositoryInMemory(make(map[uuid.UUID]entity.Ride))
@@ -95,14 +84,8 @@ func TestRequestRide(t *testing.T) {
 
 		requestRideInput := RequestRideInput{
 			PassengerId: signUpOutput.Id,
-			From: entity.GeoLocation{
-				Lat: 49,
-				Lon: 45,
-			},
-			To: entity.GeoLocation{
-				Lat: 50,
-				Lon: 45,
-			},
+			From:        valueObjects.NewGeoLocation(49, 45),
+			To:          valueObjects.NewGeoLocation(50, 45),
 		}
 
 		rideRepository := inmemory.NewRideRepositoryInMemory(make(map[uuid.UUID]entity.Ride))
@@ -123,14 +106,8 @@ func TestRequestRide(t *testing.T) {
 		accountRepository := inmemory.NewAccountRepository(make([]entity.Account, 0))
 		requestRideInput := RequestRideInput{
 			PassengerId: id.String(),
-			From: entity.GeoLocation{
-				Lat: 49,
-				Lon: 45,
-			},
-			To: entity.GeoLocation{
-				Lat: 50,
-				Lon: 45,
-			},
+			From:        valueObjects.NewGeoLocation(49, 45),
+			To:          valueObjects.NewGeoLocation(50, 45),
 		}
 
 		rideRepository := inmemory.NewRideRepositoryInMemory(make(map[uuid.UUID]entity.Ride))

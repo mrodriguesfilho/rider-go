@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"rider-go/api/httpHandlers"
 	"rider-go/internal/application/usecase"
 	"rider-go/internal/domain/domainEvent"
 	"rider-go/internal/domain/entity"
@@ -11,6 +10,7 @@ import (
 	"rider-go/internal/infra/logger"
 	"rider-go/internal/infra/otel"
 	"rider-go/internal/infra/router"
+	"rider-go/internal/interfaces/api"
 
 	"go.uber.org/fx"
 )
@@ -29,9 +29,9 @@ func main() {
 		fx.Provide(NewEventChannel),
 		fx.Provide(NewAccountRepositoryWithDb),
 		fx.Provide(usecase.NewSignUpUseCase),
-		fx.Provide(httpHandlers.NewSignUpHandler),
+		fx.Provide(api.NewSignUpHandler),
 		fx.Provide(usecase.NewGetAccountUseCase),
-		fx.Provide(httpHandlers.NewGetAccountHandler),
+		fx.Provide(api.NewGetAccountHandler),
 		fx.Provide(router.NewChiRouter),
 		fx.Provide(logger.NewLogger),
 		fx.Invoke(router.StartServer),

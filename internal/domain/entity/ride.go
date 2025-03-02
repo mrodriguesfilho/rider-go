@@ -14,7 +14,7 @@ const (
 	None RideStatus = iota
 	Requested
 	Accepted
-	Completed
+	Finished
 )
 
 type Ride struct {
@@ -22,13 +22,13 @@ type Ride struct {
 	Status      RideStatus
 	PassengerId uuid.UUID
 	DriverId    uuid.UUID
-	From        GeoLocation
-	To          GeoLocation
+	From        valueObjects.GeoLocation
+	To          valueObjects.GeoLocation
 	Fare        valueObjects.Money
 	DriverFare  valueObjects.Money
 }
 
-func NewRide(passengerId uuid.UUID, from GeoLocation, to GeoLocation) *Ride {
+func NewRide(passengerId uuid.UUID, from valueObjects.GeoLocation, to valueObjects.GeoLocation) *Ride {
 
 	return &Ride{
 		EntityRoot:  &EntityRoot{Id: uuid.New()},
@@ -42,7 +42,7 @@ func NewRide(passengerId uuid.UUID, from GeoLocation, to GeoLocation) *Ride {
 }
 
 func (r *Ride) StatusAllowedToRequestNewRide() bool {
-	return r.Status == Completed
+	return r.Status == Finished
 }
 
 func (r *Ride) AcceptRide(driverAccount Account) error {
@@ -58,6 +58,26 @@ func (r *Ride) AcceptRide(driverAccount Account) error {
 	r.Status = Accepted
 
 	r.RaiseEvent(domainEvent.NewRideAcceptedEvent(r.Id))
+
+	return nil
+}
+
+func (r *Ride) FinishRide(driverLocation valueObjects.GeoLocation) error {
+	if r.Status == Requested {
+		return errors.New("a ride cannot be finished without being accepted")
+	}
+
+	if r.Status == Finished {
+		return errors.New("this ride was already finished")
+	}
+
+	if !r.To.Equals(driverLocation) {
+		return errors.New("the driver location must be the same as the ride destination")
+	}
+
+	r.Status = Finished
+
+	r.RaiseEvent(domainEvent.NewRideFinishedEvent(r.Id))
 
 	return nil
 }

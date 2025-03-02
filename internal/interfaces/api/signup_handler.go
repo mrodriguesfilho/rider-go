@@ -1,4 +1,4 @@
-package httpHandlers
+package api
 
 import (
 	"encoding/json"
@@ -7,21 +7,21 @@ import (
 	"rider-go/internal/infra/logger"
 )
 
-type SignUpHandler struct {
+type SignUp struct {
 	SignUpUseCase *usecase.SignUpUseCase
 	Logger        logger.CustomLogger
 	*BaseHandler
 }
 
-func NewSignUpHandler(signUpUseCase *usecase.SignUpUseCase, logger logger.CustomLogger) *SignUpHandler {
-	return &SignUpHandler{
+func NewSignUpHandler(signUpUseCase *usecase.SignUpUseCase, logger logger.CustomLogger) *SignUp {
+	return &SignUp{
 		SignUpUseCase: signUpUseCase,
 		BaseHandler:   NewBaseHandle(),
 		Logger:        logger,
 	}
 }
 
-func (h *SignUpHandler) Handle(w http.ResponseWriter, r *http.Request) {
+func (h *SignUp) Handle(w http.ResponseWriter, r *http.Request) {
 
 	var signUpInput usecase.SignUpInput
 	err := json.NewDecoder(r.Body).Decode(&signUpInput)

@@ -1,6 +1,7 @@
-package eventhandlers
+package event_handlers
 
 import (
+	"encoding/json"
 	"rider-go/internal/domain/domainEvent"
 	"rider-go/internal/infra/database/repository"
 	"rider-go/internal/infra/payment"
@@ -22,7 +23,8 @@ func NewRideAcceptedEventHandler(rideRepository repository.RideRepository, accou
 
 func (r *RideAcceptedHandler) Handle(domainEventInterface domainEvent.DomainEventInterface) {
 
-	rideAcceptedEvent := domainEventInterface.GetPayload().(domainEvent.RideAccepted)
+	var rideAcceptedEvent domainEvent.RideAccepted
+	json.Unmarshal([]byte(domainEventInterface.GetPayload()), &rideAcceptedEvent)
 
 	ride, err := r.rideRepository.GetById(rideAcceptedEvent.RideId)
 
@@ -36,12 +38,5 @@ func (r *RideAcceptedHandler) Handle(domainEventInterface domainEvent.DomainEven
 		return
 	}
 
-	driver, err := r.accountRepository.GetById(ride.DriverId)
-
-	if err != nil {
-		return
-	}
-
 	r.paymentService.Debit(passenger.Email, ride.Fare)
-	r.paymentService.Credit(driver.Email, ride.DriverFare)
 }

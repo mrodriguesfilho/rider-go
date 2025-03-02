@@ -2,11 +2,12 @@ package usecase
 
 import (
 	"rider-go/internal/application/event"
-	"rider-go/internal/application/eventhandlers"
+	eventhandlers "rider-go/internal/application/event/handlers"
 	"rider-go/internal/domain/domainEvent"
 	"rider-go/internal/domain/entity"
+	"rider-go/internal/domain/valueObjects"
 	inmemory "rider-go/internal/infra/database/InMemory"
-	"rider-go/internal/infra/eventAdapters"
+	event_in_memory_adapter "rider-go/internal/infra/event/inmemory_adapter"
 	"rider-go/internal/infra/payment"
 	"testing"
 
@@ -37,10 +38,10 @@ func (s *accountRideTestSuite) SetupTest() {
 	handlers := make(map[string]event.EventHandler)
 	handlers[domainEvent.RideAccepetedEventName] = rideAccepetedHandler
 	eventChan := make(chan domainEvent.DomainEventInterface)
-	eventConsumer := eventAdapters.NewEventHandlerInMemory(eventChan, handlers)
+	eventConsumer := event_in_memory_adapter.NewEventHandlerInMemory(eventChan, handlers)
 	eventConsumer.Listen()
 
-	eventBroker := eventAdapters.NewEventBrokerInMemory(eventChan)
+	eventBroker := event_in_memory_adapter.NewEventBrokerInMemory(eventChan)
 	s.eventDispatcher = *event.NewEventDispatcher(eventBroker)
 	s.acceptRideUseCase = *NewAcceptRideUseCase(s.accountRepository, s.rideRepository, s.eventDispatcher)
 }
@@ -72,14 +73,8 @@ func (s *accountRideTestSuite) TestAcceptRide1() {
 
 		requestRideInput := RequestRideInput{
 			PassengerId: passengerAccount.Id.String(),
-			From: entity.GeoLocation{
-				Lat: 49,
-				Lon: 45,
-			},
-			To: entity.GeoLocation{
-				Lat: 50,
-				Lon: 45,
-			},
+			From:        valueObjects.NewGeoLocation(49, 45),
+			To:          valueObjects.NewGeoLocation(50, 45),
 		}
 
 		requestRideOuput, _ := s.requestRideUseCase.Execute(requestRideInput)
@@ -123,14 +118,8 @@ func (s *accountRideTestSuite) TestAcceptRide2() {
 
 		requestRideInput := RequestRideInput{
 			PassengerId: passengerAccount.Id.String(),
-			From: entity.GeoLocation{
-				Lat: 49,
-				Lon: 45,
-			},
-			To: entity.GeoLocation{
-				Lat: 50,
-				Lon: 45,
-			},
+			From:        valueObjects.NewGeoLocation(49, 45),
+			To:          valueObjects.NewGeoLocation(50, 45),
 		}
 
 		requestRideOuput, _ := s.requestRideUseCase.Execute(requestRideInput)

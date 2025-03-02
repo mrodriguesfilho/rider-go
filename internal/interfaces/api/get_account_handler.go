@@ -1,4 +1,4 @@
-package httpHandlers
+package api
 
 import (
 	"encoding/json"
@@ -6,19 +6,19 @@ import (
 	"rider-go/internal/application/usecase"
 )
 
-type GetAccountHandler struct {
-	GetAccountUseCase *usecase.GetAccountUsecase
+type GetAccount struct {
+	GetAccountUseCase *usecase.GetAccount
 	*BaseHandler
 }
 
-func NewGetAccountHandler(getAccountUseCase *usecase.GetAccountUsecase) *GetAccountHandler {
-	return &GetAccountHandler{
+func NewGetAccountHandler(getAccountUseCase *usecase.GetAccount) *GetAccount {
+	return &GetAccount{
 		GetAccountUseCase: getAccountUseCase,
 		BaseHandler:       NewBaseHandle(),
 	}
 }
 
-func (g *GetAccountHandler) Handle(w http.ResponseWriter, r *http.Request) {
+func (g *GetAccount) Handle(w http.ResponseWriter, r *http.Request) {
 
 	email := r.URL.Query().Get("email")
 

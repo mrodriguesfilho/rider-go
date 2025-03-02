@@ -1,4 +1,4 @@
-package eventAdapters
+package event_in_memory_adapter
 
 import (
 	"fmt"
@@ -22,7 +22,7 @@ func NewEventHandlerInMemory(eventChan chan domainEvent.DomainEventInterface, ha
 func (eh *EventhHandlerInMemoryAdapter) Listen() {
 	go func() {
 		for event := range eh.eventChan {
-			if handler, exists := eh.handlers[event.EventName()]; exists {
+			if handler, exists := eh.handlers[event.GetEventName()]; exists {
 				handler.Handle(event)
 			} else {
 				fmt.Printf("No handler found for the given event")
